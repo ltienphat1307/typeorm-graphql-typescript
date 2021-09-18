@@ -3,6 +3,7 @@ import { Container } from "typedi";
 import * as TypeORM from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
+import cors from "cors";
 
 import createSchema from "./schema";
 
@@ -17,6 +18,16 @@ const bootstrap = async () => {
     // build TypeGraphQL executable schema
     const schema = await createSchema(Container);
 
+    const app = express();
+    const corsConfig = {
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+      credentials: true,
+      origin: [/localhost*/],
+    };
+    app.use(cors(corsConfig));
+
+    const port = 3000;
+
     // Create GraphQL server
     const server = new ApolloServer({
       schema,
@@ -24,10 +35,7 @@ const bootstrap = async () => {
       debug: true,
       playground: true,
     });
-    const app = express();
-    const port = 3000;
-
-    server.applyMiddleware({ app });
+    server.applyMiddleware({ app, cors: corsConfig });
 
     app.listen({ port }, () => {
       console.log(

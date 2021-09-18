@@ -8,7 +8,7 @@ import { CreateCategoryInput } from "./CreateCategoryInput";
 @Resolver((_type) => Category)
 export class CreateCategory {
   @Mutation((_type) => Category)
-  public async CreateCategory(
+  public async createCategory(
     @Arg("data") inputData: CreateCategoryInput
   ): Promise<Category> {
     const categoryRepository = getCustomRepository(CategoryRepository);
